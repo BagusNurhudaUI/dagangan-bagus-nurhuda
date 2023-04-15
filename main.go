@@ -14,10 +14,10 @@ func main() {
 	fmt.Println("Starting...")
 
 	//first initialize database
-	config.DBInit()
+	db := config.DBInit()
 
 	app := fiber.New()
-	router.StartApp(app)
+	router.StartApp(app, db)
 
 	app.Listen(config.GetEnv("PORT"))
 

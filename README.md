@@ -51,6 +51,7 @@ for post, using Title, Caption, Price and Photo_url in request body
 ## Features
 
 ```go
+- CRUD API on product entity
 - Pagination :
     - can be configured by page and limit
 - Filtering :

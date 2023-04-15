@@ -7,17 +7,17 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/config"
 	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/models"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetProduct(c *fiber.Ctx) error {
-	db := config.GetDB()
+// function for getting all the products
+func (db *InDB) GetProduct(c *fiber.Ctx) error {
+
 	Product := []models.Product{}
 
-	err := db.Debug().Find(&Product).Error
+	err := db.DB.Debug().Find(&Product).Error
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"message": err.Error(),
@@ -30,13 +30,13 @@ func GetProduct(c *fiber.Ctx) error {
 
 }
 
-func GetProductById(c *fiber.Ctx) error {
-	db := config.GetDB()
+// functions for getting product by ID
+func (db *InDB) GetProductById(c *fiber.Ctx) error {
+
 	params := c.Params("productId")
 	Product := models.Product{}
-	_ = db
 
-	err := db.Debug().Where("id = ?", params).First(&Product).Error
+	err := db.DB.Debug().Where("id = ?", params).First(&Product).Error
 	log.Println(Product.ToString())
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
@@ -50,18 +50,20 @@ func GetProductById(c *fiber.Ctx) error {
 
 }
 
-func PostProduct(c *fiber.Ctx) error {
-	db := config.GetDB()
-	// contentType := c.Request.Header.Get("Content-Type")
+// functions for post a products
+func (db *InDB) PostProduct(c *fiber.Ctx) error {
+
 	Product := new(models.Product)
-	_ = db
+
+	// parse the req.body to product models
 	if err := c.BodyParser(Product); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	err := db.Debug().Create(&Product).Error
+	//create a new product
+	err := db.DB.Debug().Create(&Product).Error
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"message": err.Error(),
@@ -75,20 +77,21 @@ func PostProduct(c *fiber.Ctx) error {
 
 }
 
-func UpdateProduct(c *fiber.Ctx) error {
-	db := config.GetDB()
+// functions for update the product by id, fields (title, caption, photo_url and price) will be updated
+func (db *InDB) UpdateProduct(c *fiber.Ctx) error {
 	params := c.Params("productId")
-	_, _ = db, params
-	Product := new(models.Product)
-	UpdateProduct := new(models.Product)
+	Product := new(models.Product)       // models to get a fields product from database
+	UpdateProduct := new(models.Product) // models to update a field product to database
 
+	// parse req.body to product models
 	if err := c.BodyParser(Product); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	err := db.Debug().Where("id = ?", params).First(&UpdateProduct)
+	//find id product
+	err := db.DB.Debug().Where("id = ?", params).First(&UpdateProduct)
 	if err.Error != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"message": fmt.Sprintf("Update not successful, id %s is not found", params),
@@ -107,7 +110,9 @@ func UpdateProduct(c *fiber.Ctx) error {
 		if Product.Price != 0 {
 			UpdateProduct.Price = Product.Price
 		}
-		err := db.Debug().Save(&UpdateProduct).Error
+
+		// Update the product from request body
+		err := db.DB.Debug().Save(&UpdateProduct).Error
 		if err != nil {
 			return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 				"message": err.Error(),
@@ -123,11 +128,13 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 }
 
-func DeleteProduct(c *fiber.Ctx) error {
-	db := config.GetDB()
+// function to delete a product by id
+func (db *InDB) DeleteProduct(c *fiber.Ctx) error {
 	params := c.Params("productId")
-	Product := []models.Product{}
-	err := db.Debug().Delete(&Product, params)
+	Product := models.Product{}
+
+	// Delete the product by 1
+	err := db.DB.Debug().Delete(&Product, params)
 	if err.Error != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"message": err.Error.Error(),
@@ -143,14 +150,14 @@ func DeleteProduct(c *fiber.Ctx) error {
 	}
 }
 
-func Paginate(c *fiber.Ctx) error {
-	db := config.GetDB()
+// function to get pagination information from products
+func (db *InDB) Paginate(c *fiber.Ctx) error {
+
 	Product := []models.Product{}
 	rawQuery := "SELECT * FROM products"
 	var (
 		rawSearch string
-		// totalRows int64
-		rawPrice string
+		rawPrice  string
 	)
 	search := c.Query("search")
 	maxPrice, _ := strconv.Atoi(c.Query("maxprice"))
@@ -189,7 +196,7 @@ func Paginate(c *fiber.Ctx) error {
 	}
 
 	// Make the sort query string
-	if sortbyprice != "" {
+	if sortbyprice != "" && (sortbyprice == "true" || sortbyprice == "false") {
 		if sortbyprice == "true" {
 			rawQuery = fmt.Sprintf("%s ORDER BY price ASC", rawQuery)
 		}
@@ -206,7 +213,7 @@ func Paginate(c *fiber.Ctx) error {
 
 	temp := []models.Product{}
 	// Get the total number of rows in the database Product
-	db.Raw(rawQuery).Scan(&temp)
+	db.DB.Raw(rawQuery).Scan(&temp)
 	totalRows := len(temp)
 
 	totalPage := math.Ceil(float64(float64(totalRows)/float64(limit)) + 0.00000000001)
@@ -219,7 +226,7 @@ func Paginate(c *fiber.Ctx) error {
 	rawQuery = fmt.Sprintf("%s LIMIT %d OFFSET %d", rawQuery, int64(limit), limit*(page-1))
 
 	// Get the Product By Final Queries
-	err := db.Debug().Raw(rawQuery).Scan(&Product).Error
+	err := db.DB.Debug().Raw(rawQuery).Scan(&Product).Error
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"search":  search,

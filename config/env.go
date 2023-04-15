@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// functions to get key from environment
 func GetEnv(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {

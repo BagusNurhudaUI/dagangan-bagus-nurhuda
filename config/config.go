@@ -12,11 +12,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var (
-	db *gorm.DB
-)
-
-func DBInit() {
+// initialize database connection return gorm.DB
+func DBInit() *gorm.DB {
 	var err error
 	portdb, _ := strconv.Atoi(GetEnv("portdb"))
 	var (
@@ -25,6 +22,7 @@ func DBInit() {
 		user     = GetEnv("user")
 		password = GetEnv("password")
 		dbname   = GetEnv("dbname")
+		db       *gorm.DB
 	)
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
@@ -36,10 +34,7 @@ func DBInit() {
 	fmt.Println("Connected to database")
 	err = db.AutoMigrate(models.Product{})
 	if err != nil {
-		return
+		log.Println("Failed to migrate, error: ", err)
 	}
-}
-
-func GetDB() *gorm.DB {
 	return db
 }

@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"dagangan/config"
-	"dagangan/models"
 	"fmt"
 	"log"
 	"math"
 	"net/http"
 	"strconv"
+
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/config"
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/models"
 
 	"github.com/gofiber/fiber/v2"
 )

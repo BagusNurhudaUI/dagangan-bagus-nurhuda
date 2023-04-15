@@ -1,10 +1,11 @@
 package config
 
 import (
-	"dagangan/models"
 	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

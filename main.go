@@ -1,9 +1,10 @@
 package main
 
 import (
-	"dagangan/config"
-	"dagangan/router"
 	"fmt"
+
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/config"
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/router"
 
 	"github.com/gofiber/fiber/v2"
 )

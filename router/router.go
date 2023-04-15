@@ -1,7 +1,7 @@
 package router
 
 import (
-	"dagangan/controllers"
+	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/controllers"
 
 	"github.com/gofiber/fiber/v2"
 )

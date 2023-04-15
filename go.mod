@@ -1,4 +1,4 @@
-module dagangan
+module github.com/BagusNurhudaUI/dagangan-bagus-nurhuda
 
 go 1.19
 

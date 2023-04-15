@@ -79,8 +79,8 @@ for post, using Title, Caption, Price and Photo_url in request body
   - minprice : minimum price will be returned
   - sortbyprice :
 
-    "true" : will order products by price ascending
-    "false" : will order products by price descending
+    - "true" : will order products by price ascending
+    - "false" : will order products by price descending
 
 - `POST` : create a new product
 

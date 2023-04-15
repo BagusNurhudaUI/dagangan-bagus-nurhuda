@@ -12,7 +12,7 @@ It is just a simple app for recruitment process at dagangan.com
 
 ```bash
 # Download this project
-go get github.com/BagusNurhudaUI/dagangan-bagus-nurhuda
+git clone https://github.com/BagusNurhudaUI/dagangan-bagus-nurhuda.git
 ```
 
 Before runnng the API server on your local, rename file example.env -> .env and fill in every line required for environment.

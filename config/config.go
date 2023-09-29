@@ -5,7 +5,6 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -31,9 +30,9 @@ func DBInit() *gorm.DB {
 		log.Fatal("failed to connect to database")
 	}
 	fmt.Println("Connected to database")
-	err = db.AutoMigrate(models.Product{})
-	if err != nil {
-		log.Println("Failed to migrate, error: ", err)
-	}
+	// err = db.AutoMigrate(models.Product{})
+	// if err != nil {
+	// 	log.Println("Failed to migrate, error: ", err)
+	// }
 	return db
 }

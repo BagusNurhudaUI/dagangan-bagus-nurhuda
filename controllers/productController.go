@@ -33,10 +33,15 @@ func (db *InDB) GetProduct(c *fiber.Ctx) error {
 // functions for getting product by ID
 func (db *InDB) GetProductById(c *fiber.Ctx) error {
 
-	params := c.Params("productId")
+	params, err := strconv.Atoi(c.Params("productId"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			"message": err.Error(),
+		})
+	}
 	Product := models.Product{}
 
-	err := db.DB.Debug().Where("id = ?", params).First(&Product).Error
+	err = db.DB.Debug().Where("id = ?", params).First(&Product).Error
 	log.Println(Product.ToString())
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
@@ -207,6 +212,8 @@ func (db *InDB) Paginate(c *fiber.Ctx) error {
 		rawQuery = fmt.Sprintf("%s ORDER BY id ASC", rawQuery)
 	}
 
+	
+
 	// Get the page and the limit for the paginations.
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "5"))
@@ -223,6 +230,7 @@ func (db *InDB) Paginate(c *fiber.Ctx) error {
 		})
 	}
 	rawQuery = fmt.Sprintf("%s LIMIT %d OFFSET %d", rawQuery, int64(limit), limit*(page-1))
+	rawQuery = fmt.Sprintf("%s ;", rawQuery)
 
 	// Get the Product By Final Queries
 	err := db.DB.Debug().Raw(rawQuery).Scan(&Product).Error

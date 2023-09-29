@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/config"
 	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/router"
@@ -19,6 +21,12 @@ func main() {
 	app := fiber.New()
 	router.StartApp(app, db)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if PORT environment variable is not set
+	}
+
+	log.Printf("Server starting on :%s", port)
 	app.Listen(":"+config.GetEnv("PORT"))
 
 }

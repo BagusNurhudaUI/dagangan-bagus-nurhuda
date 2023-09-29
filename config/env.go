@@ -9,9 +9,11 @@ import (
 
 // functions to get key from environment
 func GetEnv(key string) string {
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Print("Error loading .env file")
+	if os.Getenv("ENVIRONMENT") != "production" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			fmt.Print("Error loading .env file")
+		}
 	}
 	return os.Getenv(key)
 }

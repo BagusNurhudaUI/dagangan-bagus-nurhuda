@@ -9,6 +9,8 @@ WORKDIR /app
 COPY . .
 RUN go mod tidy
 
+# Set environment variables
+ENV ENVIRONMENT production
 
 # Build
 RUN go build -o /binary

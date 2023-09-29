@@ -215,7 +215,6 @@ func (db *InDB) Paginate(c *fiber.Ctx) error {
 	// Get the total number of rows in the database Product
 	db.DB.Raw(rawQuery).Scan(&temp)
 	totalRows := len(temp)
-
 	totalPage := math.Ceil(float64(float64(totalRows)/float64(limit)) + 0.00000000001)
 
 	if page > int(totalPage) {

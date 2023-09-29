@@ -1,0 +1,20 @@
+FROM golang:alpine
+
+RUN apk update && apk add --no-cache git
+
+# Set destination for COPY
+WORKDIR /app
+
+# Download Go modules
+COPY . .
+RUN go mod tidy
+
+
+# Build
+RUN go build -o /binary
+
+# Optional:
+EXPOSE 3000
+
+# Run
+CMD [ "/binary" ]

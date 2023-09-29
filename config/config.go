@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/BagusNurhudaUI/dagangan-bagus-nurhuda/models"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -17,15 +16,15 @@ func DBInit() *gorm.DB {
 	var err error
 	portdb, _ := strconv.Atoi(GetEnv("portdb"))
 	var (
-		host     = GetEnv("host")
+		host     = GetEnv("POSTGRES_HOST")
 		port     = portdb
-		user     = GetEnv("user")
-		password = GetEnv("password")
-		dbname   = GetEnv("dbname")
+		user     = GetEnv("POSTGRES_USER")
+		password = GetEnv("POSTGRES_PASSWORD")
+		dbname   = GetEnv("POSTGRES_DATABASE")
 		db       *gorm.DB
 	)
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=require", host, port, user, password, dbname)
+	db, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {

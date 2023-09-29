@@ -19,6 +19,6 @@ func main() {
 	app := fiber.New()
 	router.StartApp(app, db)
 
-	app.Listen(config.GetEnv("PORT"))
+	app.Listen(":"+config.GetEnv("PORT"))
 
 }

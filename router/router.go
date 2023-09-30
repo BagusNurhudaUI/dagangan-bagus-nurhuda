@@ -24,6 +24,6 @@ func StartApp(app *fiber.App, db *gorm.DB) {
 
 func GetIndex(c *fiber.Ctx) error {
 	return c.Status(200).JSON(&fiber.Map{
-		"message": "Successfully get index page",
+		"message": "Successfully get index page on Test Deployment",
 	})
 }
